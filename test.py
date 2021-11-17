@@ -60,6 +60,13 @@ from detectron2.config import get_cfg
 from detectron2.engine.defaults import DefaultPredictor
 from densepose import add_densepose_config
 
+from densepose.vis.bounding_box import BoundingBoxVisualizer
+from densepose.vis.extractor import create_extractor
+from densepose.vis.densepose_results import (
+    DensePoseResultsContourVisualizer,
+    DensePoseResultsFineSegmentationVisualizer,
+)
+
 class pose_extractor():
     def __init__(self):
         """
@@ -102,6 +109,51 @@ class pose_extractor():
                 output_dict[key]  = getattr(pose_outputs, key)
 
             return output_dict
+
+
+class SimpleVisualizer():
+    def __init__(self, visualizers):
+        """
+        pick visual kinds that you wank,
+        then this instance give the img with visual information
+
+        dp_contour: basic chart spreaded over the body
+        dp_segm: segmentation to parts of body
+        bbox: bnding box
+        """
+        vis_dict = {
+            "dp_contour": DensePoseResultsContourVisualizer,
+            "dp_segm": DensePoseResultsFineSegmentationVisualizer,
+            "bbox": BoundingBoxVisualizer,
+        }
+
+        self.visualizers = []
+        self.extractors = []
+        for vis_str in visualizers:
+            vis = vis_dict[vis_str]()
+            self.visualizers.append(vis)
+            self.extractors.append(create_extractor(vis))
+
+    def visualize(self, img_bgr, outputs, img_to_gray=False):
+        img = img_bgr
+        data = self._extract_data(outputs["instances"])
+
+        if img_to_gray:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        else:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        for i, visualizer in enumerate(self.visualizers):
+            img = visualizer.visualize(img, data[i])
+        return img
+
+    def _extract_data(self, outputs):
+        datas = []
+        for extractor in self.extractors:
+            # TODO plz chk None is ok to place here
+            data = extractor(outputs, None)
+            datas.append(data)
+        return datas
 
 
 def mk_mp4_label(file_path, out_path, num_seqence=16, fps_setting=5):
@@ -212,6 +264,9 @@ def mk_mp4_label(file_path, out_path, num_seqence=16, fps_setting=5):
 
                     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     pose_output = extractor(img)
+
+                    visualizer = SimpleVisualizer(["dp_contour"])
+                    post_img = visualizer.visualize(img, pose_output)
 
                     # for visual
                     # if pose_output:
