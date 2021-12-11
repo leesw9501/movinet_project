@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/45427391/145661896-49a5e3b9-b0b0-4e39-869a-918a4f577d15.png)
+
 # movinet_project
 
 data_preprocessing.py 으로 데이터 전처리 한 뒤 train.py으로 학습 후 test_demo.py 로 테스트 합니다.
