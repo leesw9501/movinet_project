@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/45427391/145662188-5f834a72-d287-40dc-8419-348fbf29f0f3.png)
+![image](https://user-images.githubusercontent.com/45427391/145662155-6d54ffb5-8c1f-4187-ab00-5698b173cf98.png)
 ![image](https://user-images.githubusercontent.com/45427391/145661896-49a5e3b9-b0b0-4e39-869a-918a4f577d15.png)
 
 # movinet_project
