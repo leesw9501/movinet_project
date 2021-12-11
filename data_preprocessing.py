@@ -130,7 +130,7 @@ for class_folder in class_list:
                 #print(file[:-4])
                 #print(file[-4:]=='.mp4')
 
-class_dict=dict()
+class_dict=dict()  
 class_dict['normal']=0
 class_dict['assault']=1
 class_dict['fight']=2
@@ -185,7 +185,7 @@ def mk_mp4_label(file_path, out_path, num_seqence=16, fps_setting=5):
     else:
         etint = stint + int(((float(du[0]) * 60) + float(du[1])) * int(dict2_type['annotation']['header']['fps']))
 
-    # 크롭 및 리사이즈
+    # 크롭 및 리사이즈  (crop & resize)
     width = int(dict2_type['annotation']['size']['width'])
     height = int(dict2_type['annotation']['size']['height'])
     depth = int(dict2_type['annotation']['size']['depth'])
